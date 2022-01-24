@@ -68,7 +68,7 @@ public class ParkourCommands {
             return;
         }
 
-        if (player.getLocation().getBlock().getType() == Material.LEGACY_IRON_PLATE || player.getLocation().getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+        if (player.getLocation().getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
             if (LocationUtil.isCheckpoint(player.getLocation())) {
                 player.sendMessage(CC.translate("&cThis checkpoint already exists!"));
                 return;
@@ -94,7 +94,7 @@ public class ParkourCommands {
             return;
         }
 
-        if (player.getLocation().getBlock().getType() == Material.LEGACY_IRON_PLATE || player.getLocation().getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+        if (player.getLocation().getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
             if (!LocationUtil.isCheckpoint(player.getLocation())) {
                 player.sendMessage(CC.translate("&cThis is not a checkpoint!"));
                 return;
@@ -118,7 +118,7 @@ public class ParkourCommands {
             return;
         }
 
-        if (player.getLocation().getBlock().getType() == Material.LEGACY_GOLD_PLATE || player.getLocation().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
+        if (player.getLocation().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
             plugin.getParkourHandler().setStartPoint(player.getLocation());
             plugin.getParkourHandler().save();
             player.sendMessage(CC.translate("&aSuccessfully set the end position to your standing position!"));
@@ -137,10 +137,11 @@ public class ParkourCommands {
             return;
         }
 
-        if (player.getLocation().getBlock().getType() == Material.LEGACY_GOLD_PLATE || player.getLocation().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
+        if (player.getLocation().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
             plugin.getParkourHandler().setEndPoint(player.getLocation());
             plugin.getParkourHandler().save();
             player.sendMessage(CC.translate("&aSuccessfully set the end position to your standing position!"));
+            return;
         }
 
         player.sendMessage(CC.translate("&cYou must be standing on a gold pressure plate!"));

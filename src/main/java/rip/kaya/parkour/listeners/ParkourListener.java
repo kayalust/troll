@@ -34,7 +34,7 @@ public class ParkourListener implements Listener {
         if (profile.isInParkour()) return;
         Material blockType = player.getLocation().getBlock().getType();
 
-        if (blockType == Material.LEGACY_GOLD_PLATE || blockType == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
+        if (blockType == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
             if (!LocationUtil.isValidPoint(player.getLocation())) return;
 
             if (!profile.isInParkour()) {
@@ -46,7 +46,7 @@ public class ParkourListener implements Listener {
 
             ParkourSession session = profile.getParkourSession();
             session.finish();
-        } else if (blockType == Material.LEGACY_IRON_PLATE || blockType == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+        } else if (blockType == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
             if (!LocationUtil.isCheckpoint(player.getLocation())) return;
 
             ParkourSession session = profile.getParkourSession();

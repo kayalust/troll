@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import rip.kaya.parkour.ParkourPlugin;
 import rip.kaya.parkour.listeners.ParkourListener;
 import rip.kaya.parkour.objects.ParkourCheckpoint;
@@ -65,9 +64,10 @@ public class ParkourHandler {
         this.startPoint = plugin.getConfig().getString("parkour.start") != null ? LocationUtil.deserialize(plugin.getConfig().getString("parkour.start")) : null;
         this.endPoint = plugin.getConfig().getString("parkour.end") != null ? LocationUtil.deserialize(plugin.getConfig().getString("parkour.end")) : null;
 
-        JsonObject object = plugin.getCheckpointsFile().getElement() == null ? new JsonObject() : plugin.getCheckpointsFile().getElement().getAsJsonObject();
+        JsonObject object = plugin.getCheckpointsFile().getElement().getAsJsonObject();
 
-        JsonObject data = object.get("checkpointsData").getAsJsonObject();
+        JsonObject data = object.get("checkpointsData") == null ? new JsonObject() : object.get("checkpointsData").getAsJsonObject();
+        if (data.size() == 0) return; // dont load
 
         for (Map.Entry<String, JsonElement> entry : data.entrySet()) {
             ParkourCheckpoint checkpoint = new ParkourCheckpoint();

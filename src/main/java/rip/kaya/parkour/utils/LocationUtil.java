@@ -63,7 +63,7 @@ public class LocationUtil {
     }
 
     public boolean isCheckpoint(Location location) {
-        if (location.getBlock().getType() == Material.LEGACY_IRON_PLATE || location.getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+        if (location.getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
             for (ParkourCheckpoint checkpoint : ParkourPlugin.getInstance().getParkourHandler().getCheckpoints()) {
                 if (checkpoint.getLocation().equals(location)) return true;
             }
@@ -73,7 +73,7 @@ public class LocationUtil {
     }
 
     public boolean isValidPoint(Location location) {
-        if (location.getBlock().getType() == Material.LEGACY_GOLD_PLATE || location.getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
+        if (location.getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
             return ParkourPlugin.getInstance().getParkourHandler().getEndPoint().equals(location) || ParkourPlugin.getInstance().getParkourHandler().getStartPoint().equals(location);
         }
 
