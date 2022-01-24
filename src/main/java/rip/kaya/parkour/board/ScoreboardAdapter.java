@@ -49,7 +49,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
             toReturn.add("Online: &b" + Bukkit.getOnlinePlayers().size());
             toReturn.add("In Parkour: &b" + plugin.getProfileHandler().getPlayersInParkour().size());
             toReturn.add(" ");
-            toReturn.add("Best Attempt: &b" + TimeUtil.millisToTimer(profile.getBestAttempt().getTimeElapsed()));
+            toReturn.add("Best Attempt: &b" + (profile.getBestAttempt() == null ? "None" : TimeUtil.millisToTimer(profile.getBestAttempt().getTimeElapsed())));
         }
         toReturn.add(" ");
         toReturn.add("&7&o" + plugin.getServerIP());
