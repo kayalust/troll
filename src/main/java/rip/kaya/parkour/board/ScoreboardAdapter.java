@@ -38,7 +38,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
 
             for (int i = 1; i <= 5; i++) {
                 for (Profile pf : plugin.getProfileHandler().getPlayersTop(5)) {
-                    if (pf.getBestAttempt() == null) { // right here could be done better, but that requires effort
+                    if (pf.getBestAttempt() == null) { // right here could be done better, but that requires effort and brain usage
                         toReturn.add("&b#" + i + " &7- " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&bNone");
                     } else {
                         toReturn.add("&b#" + i + " &7- " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&b" + TimeUtil.millisToTimer(pf.getBestAttempt().getTimeElapsed()));
