@@ -2,5 +2,6 @@ name: Troll
 version: '${project.version}'
 main: rip.kaya.parkour.ParkourPlugin
 author: kayalust
+api-version: 1.17
 description: My trial plugin for DevRoom
 depend: [WorldGuard]

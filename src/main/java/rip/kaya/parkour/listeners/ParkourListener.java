@@ -31,23 +31,26 @@ public class ParkourListener implements Listener {
         Profile profile = plugin.getProfileHandler().getByUUID(player.getUniqueId());
 
         if (event.getAction() != Action.PHYSICAL) return;
+        if (plugin.getParkourHandler().getStartPoint() == null || plugin.getParkourHandler().getEndPoint() == null) return;
         if (profile.isInParkour()) return;
         Material blockType = player.getLocation().getBlock().getType();
 
         if (blockType == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
-            if (!LocationUtil.isValidPoint(player.getLocation())) return;
-
             if (!profile.isInParkour()) {
+                if (!LocationUtil.isValidStart(player.getLocation())) return;
                 ParkourSession session = new ParkourSession(player);
                 session.begin();
                 player.sendMessage(CC.translate("&aYou have started the parkour!"));
                 return;
             }
 
+            if (!LocationUtil.isValidEnd(player.getLocation())) return;
+
             ParkourSession session = profile.getParkourSession();
             session.finish();
         } else if (blockType == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
             if (!LocationUtil.isCheckpoint(player.getLocation())) return;
+            if (!profile.isInParkour()) return;
 
             ParkourSession session = profile.getParkourSession();
             ParkourCheckpoint checkpoint = plugin.getParkourHandler().getCheckpointByLocation(player.getLocation());

@@ -121,7 +121,7 @@ public class ParkourCommands {
         if (player.getLocation().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
             plugin.getParkourHandler().setStartPoint(player.getLocation());
             plugin.getParkourHandler().save();
-            player.sendMessage(CC.translate("&aSuccessfully set the end position to your standing position!"));
+            player.sendMessage(CC.translate("&aSuccessfully set the start position to your standing position!"));
             return;
         }
 

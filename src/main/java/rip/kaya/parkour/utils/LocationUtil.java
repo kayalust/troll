@@ -72,9 +72,17 @@ public class LocationUtil {
         return false;
     }
 
-    public boolean isValidPoint(Location location) {
+    public boolean isValidEnd(Location location) {
         if (location.getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
-            return ParkourPlugin.getInstance().getParkourHandler().getEndPoint().equals(location) || ParkourPlugin.getInstance().getParkourHandler().getStartPoint().equals(location);
+            return ParkourPlugin.getInstance().getParkourHandler().getEndPoint().equals(location);
+        }
+
+        return false;
+    }
+
+    public boolean isValidStart(Location location) {
+        if (location.getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
+            return ParkourPlugin.getInstance().getParkourHandler().getStartPoint().equals(location);
         }
 
         return false;
