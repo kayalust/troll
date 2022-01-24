@@ -1,0 +1,8 @@
+mongo:
+  uri: "mongodb://localhost:27017/parkour"
+  database: "parkour"
+parkour:
+  title: "&b&lPARKOUR"
+  server-ip: "parkour.kaya.rip"
+  permission: "parkour.admin"
+  region-name: "parkour_region"
