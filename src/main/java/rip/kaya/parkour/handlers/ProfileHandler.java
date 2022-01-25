@@ -17,7 +17,6 @@ import rip.kaya.parkour.objects.Profile;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /*
@@ -43,40 +42,30 @@ public class ProfileHandler {
 
     public void loadProfile(Profile profile) {
         MongoCollection<Document> collection = plugin.getMongoHandler().getProfiles();
-        AtomicReference<Document> document = new AtomicReference<>();
+        Document document = collection.find(Filters.eq("_id", profile.getUuid().toString())).first();
 
-        plugin.getMongoThread().execute(() -> document.set(collection.find(Filters.eq("_id", profile.getUuid().toString())).first()));
-
-        if (document.get() == null) {
+        if (document == null) {
             plugin.getLogger().info(profile.getUuid() + " is null!");
             this.saveProfile(profile);
-
-            plugin.getProfileHandler().getProfiles().putIfAbsent(profile.getUuid(), profile);
             return;
         }
 
-        ParkourAttempt bestAttempt = new ParkourAttempt();
-        Document bestAttemptDocument = (Document) document.get().get("bestAttempt");
-
-        bestAttempt.setAttemptId(UUID.fromString(bestAttemptDocument.getString("attemptId")));
-        bestAttempt.setTimeStarted(bestAttemptDocument.getLong("timeStarted"));
-        bestAttempt.setTimeEnded(bestAttemptDocument.getLong("timeEnded"));
-        bestAttempt.setTimeElapsed(bestAttemptDocument.getLong("timeElapsed"));
-
-        profile.setBestAttempt(bestAttempt);
-
-        Document attemptsDocument = (Document) document.get().get("attempts");
+        Document attemptsDocument = (Document) document.get("attempts");
 
         for (String key : attemptsDocument.keySet()) {
             Document attempt = (Document) attemptsDocument.get(key);
             ParkourAttempt parkourAttempt = new ParkourAttempt();
 
+            parkourAttempt.setAttemptId(UUID.fromString(key));
             parkourAttempt.setTimeStarted(attempt.getLong("timeStarted"));
             parkourAttempt.setTimeEnded(attempt.getLong("timeEnded"));
             parkourAttempt.setTimeElapsed(attempt.getLong("timeElapsed"));
+            parkourAttempt.setBest(attempt.getBoolean("best"));
+
+            profile.getAttempts().put(UUID.fromString(key), parkourAttempt);
         }
 
-        plugin.getProfileHandler().getProfiles().replace(profile.getUuid(), profile);
+        plugin.getProfileHandler().getProfiles().put(profile.getUuid(), profile);
     }
 
     public void saveProfile(Profile profile) {
@@ -84,20 +73,6 @@ public class ProfileHandler {
         Document document = new Document();
 
         document.put("_id", profile.getUuid().toString());
-
-        if (profile.getBestAttempt() != null) {
-            Document bestAttemptDocument = new Document();
-            ParkourAttempt attempt = profile.getBestAttempt();
-
-            bestAttemptDocument.put("attemptId", attempt.getAttemptId().toString());
-            bestAttemptDocument.put("timeStarted", attempt.getTimeStarted());
-            bestAttemptDocument.put("timeEnded", attempt.getTimeEnded());
-            bestAttemptDocument.put("timeElapsed", attempt.getTimeElapsed());
-
-            document.put("bestAttempt", bestAttemptDocument);
-        } else {
-            document.put("bestAttempt", null);
-        }
 
         Document attemptsDocument = new Document();
 
@@ -107,12 +82,13 @@ public class ProfileHandler {
             attemptDocument.put("timeStarted", attempt.getTimeStarted());
             attemptDocument.put("timeEnded", attempt.getTimeEnded());
             attemptDocument.put("timeElapsed", attempt.getTimeElapsed());
+            attemptDocument.put("best", attempt.isBest());
 
             attemptsDocument.put(attempt.getAttemptId().toString(), attemptDocument);
         }
 
         document.put("attempts", attemptsDocument);
-        plugin.getMongoThread().execute(() -> collection.replaceOne(Filters.eq("_id", profile.getUuid().toString()), document, new ReplaceOptions().upsert(true)));
+        collection.replaceOne(Filters.eq("_id", profile.getUuid().toString()), document, new ReplaceOptions().upsert(true));
         plugin.getProfileHandler().getProfiles().replace(profile.getUuid(), profile);
     }
 
@@ -135,7 +111,11 @@ public class ProfileHandler {
 
         @Override
         public int compare(Profile profile1, Profile profile2) {
-            return (int) (profile2.getBestAttempt().getTimeElapsed() - profile1.getBestAttempt().getTimeElapsed());
+            if (profile1.getBestAttempt() == null || profile2.getBestAttempt() == null) {
+                return 0;
+            }
+
+            return (int) (profile1.getBestAttempt().getTimeElapsed() - profile2.getBestAttempt().getTimeElapsed());
         }
     }
 }

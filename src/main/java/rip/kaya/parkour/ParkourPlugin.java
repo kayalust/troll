@@ -41,8 +41,6 @@ public final class ParkourPlugin extends JavaPlugin {
     private String scoreboardTitle;
     private String serverIP;
 
-    private Executor mongoThread;
-
     @Override
     public void onLoad() {
         instance = this;
@@ -55,8 +53,6 @@ public final class ParkourPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.mongoThread = Executors.newSingleThreadExecutor();
-
         this.regionName = this.getConfig().getString("parkour.region-name");
         this.adminPermission = this.getConfig().getString("parkour.permission");
         this.scoreboardTitle = this.getConfig().getString("parkour.title");
@@ -86,8 +82,8 @@ public final class ParkourPlugin extends JavaPlugin {
             player.kickPlayer("Server is restarting!");
         }
 
-        parkourHandler.save();
         profileHandler.saveAll();
+        parkourHandler.save();
         mongoHandler.shutdown();
 
         instance = null;

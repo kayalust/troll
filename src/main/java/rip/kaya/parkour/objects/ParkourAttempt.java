@@ -17,6 +17,7 @@ public class ParkourAttempt {
     private UUID attemptId;
     private Player player;
 
+    private boolean best = false;
     private long timeStarted;
     private long timeEnded;
     private long timeElapsed;

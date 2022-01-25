@@ -21,7 +21,9 @@ public class ProfileListener implements Listener {
     public void onAsyncPreLogin(AsyncPlayerPreLoginEvent event) {
         Profile profile = new Profile(event.getUniqueId());
 
-        plugin.getProfileHandler().loadProfile(profile);
+        if (!plugin.getProfileHandler().getProfiles().containsKey(event.getUniqueId())) {
+            plugin.getProfileHandler().loadProfile(profile);
+        }
     }
 
     @EventHandler

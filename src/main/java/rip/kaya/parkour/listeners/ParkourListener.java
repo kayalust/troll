@@ -39,24 +39,31 @@ public class ParkourListener implements Listener {
         if (plugin.getParkourHandler().getStartPoint() == null || plugin.getParkourHandler().getEndPoint() == null) return;
         Material blockType = Objects.requireNonNull(event.getClickedBlock()).getType();
 
-        if (blockType == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
-            if (!profile.isInParkour() && LocationUtil.isValidStart(event.getClickedBlock().getLocation())) {
-                ParkourSession session = new ParkourSession(player);
-                session.begin();
-                player.sendMessage(CC.translate("&aYou have started the parkour!"));
-            } else if (profile.isInParkour() || !LocationUtil.isValidEnd(event.getClickedBlock().getLocation())){
+        switch (blockType) {
+            case LIGHT_WEIGHTED_PRESSURE_PLATE:
+                if (!profile.isInParkour() && LocationUtil.isValidStart(event.getClickedBlock().getLocation())) {
+                    ParkourSession session = new ParkourSession(player);
+                    session.begin();
+                    player.sendMessage(CC.translate("&aYou have started the parkour!"));
+                } else if (profile.isInParkour() && LocationUtil.isValidEnd(event.getClickedBlock().getLocation())){
+                    ParkourSession session = profile.getParkourSession();
+                    session.finish();
+                }
+                break;
+            case HEAVY_WEIGHTED_PRESSURE_PLATE:
+                if (!LocationUtil.isCheckpoint(player.getLocation().getBlock().getLocation())) {
+                    plugin.getLogger().info("This is not a checkpoint!");
+                    return;
+                }
+
+                if (!profile.isInParkour()) return;
+
                 ParkourSession session = profile.getParkourSession();
-                session.finish();
-            }
-        } else if (blockType == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
-            if (!LocationUtil.isCheckpoint(player.getLocation().getBlock().getLocation())) return;
-            if (!profile.isInParkour()) return;
+                ParkourCheckpoint checkpoint = plugin.getParkourHandler().getCheckpointByLocation(event.getClickedBlock().getLocation());
 
-            ParkourSession session = profile.getParkourSession();
-            ParkourCheckpoint checkpoint = plugin.getParkourHandler().getCheckpointByLocation(event.getClickedBlock().getLocation());
-
-            session.setLastCheckpoint(checkpoint);
-            player.sendMessage(CC.translate("&aYou have reached this checkpoint in " + DurationFormatter.getRemaining(session.getTimeElapsed(), true) + "!"));
+                session.setLastCheckpoint(checkpoint);
+                player.sendMessage(CC.translate("&aYou have reached this checkpoint in " + DurationFormatter.getRemaining(session.getTimeElapsed(), true) + "!"));
+                break;
         }
     }
 }

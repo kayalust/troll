@@ -86,6 +86,8 @@ public class ParkourHandler {
             );
             checkpoints.add(checkpoint);
         }
+
+        plugin.getLogger().info("Successfully loaded " + checkpoints.size() + " checkpoints!");
     }
 
     public ParkourCheckpoint getCheckpointByLocation(Location location) {

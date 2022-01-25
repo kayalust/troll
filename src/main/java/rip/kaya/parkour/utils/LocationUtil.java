@@ -63,13 +63,7 @@ public class LocationUtil {
     }
 
     public boolean isCheckpoint(Location location) {
-        if (location.getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
-            for (ParkourCheckpoint checkpoint : ParkourPlugin.getInstance().getParkourHandler().getCheckpoints()) {
-                return checkpoint.getLocation().equals(location);
-            }
-        }
-
-        return false;
+        return ParkourPlugin.getInstance().getParkourHandler().getCheckpointByLocation(location) != null;
     }
 
     public boolean isValidEnd(Location location) {

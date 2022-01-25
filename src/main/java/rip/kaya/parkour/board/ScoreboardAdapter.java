@@ -8,7 +8,6 @@ import rip.kaya.parkour.objects.Profile;
 import rip.kaya.parkour.utils.CC;
 import rip.kaya.parkour.utils.DurationFormatter;
 import rip.kaya.parkour.utils.LocationUtil;
-import rip.kaya.parkour.utils.TimeUtil;
 import rip.kaya.parkour.utils.board.AssembleAdapter;
 
 import java.util.List;
@@ -38,14 +37,14 @@ public class ScoreboardAdapter implements AssembleAdapter {
             toReturn.add(" ");
             toReturn.add("&b&lLeaderboards");
 
-            for (int i = 1; i <= 5; i++) {
-                for (Profile pf : plugin.getProfileHandler().getPlayersTop(5)) {
-                    if (pf.getBestAttempt() == null) { // right here could be done better, but that requires effort and brain usage
-                        toReturn.add("&b#" + i + " &7- " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&bNone");
-                    } else {
-                        toReturn.add("&b#" + i + " &7- " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&b" + DurationFormatter.getRemaining(pf.getBestAttempt().getTimeElapsed(), true));
-                    }
+            int i = 1;
+            for (Profile pf : plugin.getProfileHandler().getPlayersTop(5)) {
+                if (pf.getBestAttempt() == null) { // right here could be done better, but that requires effort and brain usage
+                    toReturn.add("&b#" + i + "&7. " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&bNone");
+                } else {
+                    toReturn.add("&b#" + i + "&7. " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&b" + DurationFormatter.getRemaining(pf.getBestAttempt().getTimeElapsed(), true));
                 }
+                i++;
             }
         } else {
             toReturn.add("Online: &b" + Bukkit.getOnlinePlayers().size());

@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import rip.kaya.parkour.ParkourPlugin;
 import rip.kaya.parkour.utils.CC;
 import rip.kaya.parkour.utils.DurationFormatter;
-import rip.kaya.parkour.utils.TimeUtil;
 
 /*
  * Property of kayalust © 2022
@@ -52,7 +51,7 @@ public class ParkourSession {
 
         player.sendMessage(CC.translate("&7Parkour finished! Time elapsed: &a"
                 + DurationFormatter.getRemaining(this.getTimeElapsed(), true) + (profile.isNewBest(attempt) ? " &6&lNEW BEST" : "")));
-        if (profile.getBestAttempt() == null || profile.isNewBest(attempt)) profile.setBestAttempt(attempt);
+        if (profile.getBestAttempt() == null || profile.isNewBest(attempt)) attempt.setBest(true);
         profile.getAttempts().put(attempt.getAttemptId(), attempt);
         plugin.getProfileHandler().saveProfile(profile);
 
@@ -65,6 +64,6 @@ public class ParkourSession {
     }
 
     public long getTimeElapsed() {
-        return timeEnded - timeStarted;
+        return System.currentTimeMillis() - timeStarted;
     }
 }

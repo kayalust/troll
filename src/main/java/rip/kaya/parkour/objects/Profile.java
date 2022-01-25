@@ -17,7 +17,6 @@ public class Profile {
 
     private UUID uuid;
 
-    private ParkourAttempt bestAttempt;
     private ParkourSession parkourSession;
 
     private final LinkedHashMap<UUID, ParkourAttempt> attempts = Maps.newLinkedHashMap();
@@ -31,6 +30,10 @@ public class Profile {
     }
 
     public boolean isNewBest(ParkourAttempt attempt) {
-        return bestAttempt == null || attempt.getTimeElapsed() <= bestAttempt.getTimeElapsed();
+        return this.getBestAttempt() == null || attempt.getTimeElapsed() <= this.getBestAttempt().getTimeElapsed();
+    }
+
+    public ParkourAttempt getBestAttempt() {
+        return attempts.values().stream().filter(ParkourAttempt::isBest).findFirst().orElse(null);
     }
 }

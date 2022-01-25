@@ -44,6 +44,12 @@ public class MongoHandler {
     }
 
     public void shutdown() {
+        try {
+            Thread.sleep(50L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         this.client.close();
     }
 }
