@@ -45,9 +45,10 @@ public class ProfileHandler {
         MongoCollection<Document> collection = plugin.getMongoHandler().getProfiles();
         AtomicReference<Document> document = new AtomicReference<>();
 
-        ForkJoinPool.commonPool().execute(() -> document.set(collection.find(Filters.eq("_id", profile.getUuid().toString())).first()));
+        plugin.getMongoThread().execute(() -> document.set(collection.find(Filters.eq("_id", profile.getUuid().toString())).first()));
 
         if (document.get() == null) {
+            plugin.getLogger().info(profile.getUuid() + " is null!");
             this.saveProfile(profile);
 
             plugin.getProfileHandler().getProfiles().putIfAbsent(profile.getUuid(), profile);
@@ -111,7 +112,8 @@ public class ProfileHandler {
         }
 
         document.put("attempts", attemptsDocument);
-        ForkJoinPool.commonPool().execute(() -> collection.replaceOne(Filters.eq("_id", profile.getUuid().toString()), document, new ReplaceOptions().upsert(true)));
+        plugin.getMongoThread().execute(() -> collection.replaceOne(Filters.eq("_id", profile.getUuid().toString()), document, new ReplaceOptions().upsert(true)));
+        plugin.getProfileHandler().getProfiles().replace(profile.getUuid(), profile);
     }
 
     public Profile getByUUID(UUID uuid) {

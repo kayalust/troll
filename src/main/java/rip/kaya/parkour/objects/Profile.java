@@ -31,6 +31,6 @@ public class Profile {
     }
 
     public boolean isNewBest(ParkourAttempt attempt) {
-        return bestAttempt == null || bestAttempt.getTimeElapsed() <= attempt.getTimeElapsed();
+        return bestAttempt == null || attempt.getTimeElapsed() <= bestAttempt.getTimeElapsed();
     }
 }

@@ -13,6 +13,9 @@ import rip.kaya.parkour.utils.board.Assemble;
 import rip.kaya.parkour.utils.board.AssembleStyle;
 import rip.kaya.parkour.utils.command.CommandService;
 import rip.kaya.parkour.utils.command.Drink;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 /*
  * Property of kayalust © 2022
  * Project: Troll
@@ -38,6 +41,8 @@ public final class ParkourPlugin extends JavaPlugin {
     private String scoreboardTitle;
     private String serverIP;
 
+    private Executor mongoThread;
+
     @Override
     public void onLoad() {
         instance = this;
@@ -50,6 +55,8 @@ public final class ParkourPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        this.mongoThread = Executors.newSingleThreadExecutor();
+
         this.regionName = this.getConfig().getString("parkour.region-name");
         this.adminPermission = this.getConfig().getString("parkour.permission");
         this.scoreboardTitle = this.getConfig().getString("parkour.title");
