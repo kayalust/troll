@@ -1,6 +1,7 @@
 package rip.kaya.parkour.handlers;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Getter;
@@ -45,6 +46,8 @@ public class ParkourHandler {
 
         JsonObject object = plugin.getCheckpointsFile().getElement().getAsJsonObject();
 
+        JsonArray array = new JsonArray();
+
         for (ParkourCheckpoint checkpoint : checkpoints) {
             JsonObject obj = new JsonObject();
 
@@ -53,8 +56,10 @@ public class ParkourHandler {
             obj.addProperty("y", checkpoint.getLocation().getBlockY());
             obj.addProperty("z", checkpoint.getLocation().getBlockZ());
 
-            object.add("checkpointsData", obj);
+            array.add(obj);
         }
+
+        object.add("checkpointsData", array);
 
         plugin.getCheckpointsFile().setElement(object);
         plugin.getCheckpointsFile().save();
@@ -66,12 +71,12 @@ public class ParkourHandler {
 
         JsonObject object = plugin.getCheckpointsFile().getElement().getAsJsonObject();
 
-        JsonObject data = object.get("checkpointsData") == null ? new JsonObject() : object.get("checkpointsData").getAsJsonObject();
+        JsonArray data = object.get("checkpointsData") == null ? new JsonArray() : object.get("checkpointsData").getAsJsonArray();
         if (data.size() == 0) return; // dont load
 
-        for (Map.Entry<String, JsonElement> entry : data.entrySet()) {
+        for (JsonElement element : data) {
             ParkourCheckpoint checkpoint = new ParkourCheckpoint();
-            JsonObject obj = entry.getValue().getAsJsonObject();
+            JsonObject obj = element.getAsJsonObject();
 
             checkpoint.setLocation(new Location(
                     Bukkit.getWorld(obj.get("worldName").getAsString()),
