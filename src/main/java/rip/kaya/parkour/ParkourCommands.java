@@ -69,13 +69,13 @@ public class ParkourCommands {
         }
 
         if (player.getLocation().getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
-            if (LocationUtil.isCheckpoint(player.getLocation())) {
+            if (LocationUtil.isCheckpoint(player.getLocation().getBlock().getLocation())) {
                 player.sendMessage(CC.translate("&cThis checkpoint already exists!"));
                 return;
             }
 
             ParkourCheckpoint checkpoint = new ParkourCheckpoint();
-            checkpoint.setLocation(player.getLocation());
+            checkpoint.setLocation(player.getLocation().getBlock().getLocation());
             plugin.getParkourHandler().getCheckpoints().add(checkpoint);
             plugin.getParkourHandler().save();
             player.sendMessage(CC.translate("&aSuccessfully added a new checkpoint to parkour!"));
@@ -100,7 +100,7 @@ public class ParkourCommands {
                 return;
             }
 
-            plugin.getParkourHandler().getCheckpoints().removeIf(c -> LocationUtil.isCheckpoint(c.getLocation()));
+            plugin.getParkourHandler().getCheckpoints().removeIf(c -> LocationUtil.isCheckpoint(c.getLocation().getBlock().getLocation()));
             plugin.getParkourHandler().save();
             player.sendMessage(CC.translate("&aSuccessfully removed a checkpoint from parkour!"));
             return;
@@ -119,7 +119,7 @@ public class ParkourCommands {
         }
 
         if (player.getLocation().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
-            plugin.getParkourHandler().setStartPoint(player.getLocation());
+            plugin.getParkourHandler().setStartPoint(player.getLocation().getBlock().getLocation());
             plugin.getParkourHandler().save();
             player.sendMessage(CC.translate("&aSuccessfully set the start position to your standing position!"));
             return;
@@ -138,7 +138,7 @@ public class ParkourCommands {
         }
 
         if (player.getLocation().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
-            plugin.getParkourHandler().setEndPoint(player.getLocation());
+            plugin.getParkourHandler().setEndPoint(player.getLocation().getBlock().getLocation());
             plugin.getParkourHandler().save();
             player.sendMessage(CC.translate("&aSuccessfully set the end position to your standing position!"));
             return;

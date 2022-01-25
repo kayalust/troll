@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import rip.kaya.parkour.ParkourPlugin;
 import rip.kaya.parkour.objects.Profile;
 import rip.kaya.parkour.utils.CC;
+import rip.kaya.parkour.utils.DurationFormatter;
 import rip.kaya.parkour.utils.LocationUtil;
 import rip.kaya.parkour.utils.TimeUtil;
 import rip.kaya.parkour.utils.board.AssembleAdapter;
@@ -31,8 +32,9 @@ public class ScoreboardAdapter implements AssembleAdapter {
         Profile profile = plugin.getProfileHandler().getByUUID(player.getUniqueId());
 
         toReturn.add("&7&o----------------------");
-        if (profile.isInParkour() || LocationUtil.isInRegion(player)) {
-            toReturn.add("&bBest Attempt: &f" + (profile.getBestAttempt() == null ? "None" : TimeUtil.millisToTimer(profile.getBestAttempt().getTimeElapsed())));
+        if (LocationUtil.isInRegion(player)) {
+            if (profile.isInParkour()) toReturn.add("&bTime Elapsed: &f" + DurationFormatter.getRemaining(profile.getParkourSession().getTimeElapsed(), true));
+            toReturn.add("&bBest Attempt: &f" + (profile.getBestAttempt() == null ? "None" : DurationFormatter.getRemaining(profile.getBestAttempt().getTimeElapsed(), true)));
             toReturn.add(" ");
             toReturn.add("&b&lLeaderboards");
 
@@ -41,7 +43,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
                     if (pf.getBestAttempt() == null) { // right here could be done better, but that requires effort and brain usage
                         toReturn.add("&b#" + i + " &7- " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&bNone");
                     } else {
-                        toReturn.add("&b#" + i + " &7- " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&b" + TimeUtil.millisToTimer(pf.getBestAttempt().getTimeElapsed()));
+                        toReturn.add("&b#" + i + " &7- " + "&f" + Bukkit.getOfflinePlayer(pf.getUuid()).getName() + " &7- " + "&b" + DurationFormatter.getRemaining(pf.getBestAttempt().getTimeElapsed(), true));
                     }
                 }
             }
@@ -49,7 +51,7 @@ public class ScoreboardAdapter implements AssembleAdapter {
             toReturn.add("Online: &b" + Bukkit.getOnlinePlayers().size());
             toReturn.add("In Parkour: &b" + plugin.getProfileHandler().getPlayersInParkour().size());
             toReturn.add(" ");
-            toReturn.add("Best Attempt: &b" + (profile.getBestAttempt() == null ? "None" : TimeUtil.millisToTimer(profile.getBestAttempt().getTimeElapsed())));
+            toReturn.add("Best Attempt: &b" + (profile.getBestAttempt() == null ? "None" :  DurationFormatter.getRemaining(profile.getBestAttempt().getTimeElapsed(), true)));
         }
         toReturn.add(" ");
         toReturn.add("&7&o" + plugin.getServerIP());

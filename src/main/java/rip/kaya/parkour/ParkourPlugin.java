@@ -1,6 +1,8 @@
 package rip.kaya.parkour;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.*;
@@ -73,6 +75,10 @@ public final class ParkourPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.kickPlayer("Server is restarting!");
+        }
+
         parkourHandler.save();
         profileHandler.saveAll();
         mongoHandler.shutdown();

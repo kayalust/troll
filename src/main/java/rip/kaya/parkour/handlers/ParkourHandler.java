@@ -15,7 +15,6 @@ import rip.kaya.parkour.objects.ParkourCheckpoint;
 import rip.kaya.parkour.utils.LocationUtil;
 
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Objects;
 
 /*
@@ -43,6 +42,7 @@ public class ParkourHandler {
     public void save() {
         plugin.getConfig().set("parkour.start", LocationUtil.serialize(startPoint));
         plugin.getConfig().set("parkour.end", LocationUtil.serialize(endPoint));
+        plugin.saveConfig();
 
         JsonObject object = plugin.getCheckpointsFile().getElement().getAsJsonObject();
 

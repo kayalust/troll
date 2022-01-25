@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.entity.Player;
 import rip.kaya.parkour.ParkourPlugin;
 import rip.kaya.parkour.utils.CC;
+import rip.kaya.parkour.utils.DurationFormatter;
 import rip.kaya.parkour.utils.TimeUtil;
 
 /*
@@ -50,9 +51,8 @@ public class ParkourSession {
         Profile profile = plugin.getProfileHandler().getByUUID(player.getUniqueId());
 
         player.sendMessage(CC.translate("&7Parkour finished! Time elapsed: &a"
-                + TimeUtil.millisToTimer(this.getTimeElapsed()))
-                + (profile.isNewBest(attempt) ? " &6&lNEW BEST" : ""));
-        if (profile.getBestAttempt().getTimeElapsed() <= attempt.getTimeElapsed()) profile.setBestAttempt(attempt);
+                + DurationFormatter.getRemaining(this.getTimeElapsed(), true) + (profile.isNewBest(attempt) ? " &6&lNEW BEST" : "")));
+        if (profile.getBestAttempt() == null || profile.isNewBest(attempt)) profile.setBestAttempt(attempt);
         profile.getAttempts().put(attempt.getAttemptId(), attempt);
         plugin.getProfileHandler().saveProfile(profile);
 
